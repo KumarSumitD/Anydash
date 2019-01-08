@@ -13,9 +13,10 @@ export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'app-objselector',
   templateUrl: './objselector.component.html',
-  styleUrls: ['./objselector.component.less'],
+  styleUrls: ['./objselector.component.scss'],
   providers: [CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR]
 })
+
 
 export class ObjselectorComponent implements OnInit, ControlValueAccessor {
 
@@ -27,6 +28,14 @@ export class ObjselectorComponent implements OnInit, ControlValueAccessor {
   @Output() optSelect = new EventEmitter();
   isOpen = false;
   selectedOption;
+
+
+  private onTouchedCallback: () => void = noop;
+  private onChangeCallback: (_: any) => void = noop;
+  isSelectedValue: boolean;
+  key: string;
+  isFocused: boolean;
+
 
   types= [
         {
@@ -40,15 +49,14 @@ export class ObjselectorComponent implements OnInit, ControlValueAccessor {
         {
               "id": "3",
               "value": "Type 3"
-        }];
-
-  private onTouchedCallback: () => void = noop;
-  private onChangeCallback: (_: any) => void = noop;
-  isSelectedValue: boolean;
-  key: string;
-  isFocused: boolean;
+        }] 
+  /**
+   *Creates an instance of ObjselectorComponent.
+   * @memberof ObjselectorComponent
+   */
 
   ngOnInit() {
+    // Place default value in Objselector
     if (this.selected) {
       this.placeholder = '';
       this.isOpen = false;
@@ -114,8 +122,13 @@ export class ObjselectorComponent implements OnInit, ControlValueAccessor {
     this.optSelect.emit(selectedOption);
   }
 
+  /**
+  * toggle the Objselector
+  * @param {any} event object
+  */
   toggle(e: any) {
     e.stopPropagation();
+    // close all previously opened Objselectors, before open
     const allElems = document.querySelectorAll('.objselector-wrapper');
     for (let i = 0; i < allElems.length; i++) {
       allElems[i].classList.remove('is-open');
@@ -126,6 +139,9 @@ export class ObjselectorComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+  * Objselector click on outside
+  */
   @HostListener('document: click', ['$event'])
   onClick() {
     this.isOpen = false;
@@ -158,4 +174,5 @@ export class ObjselectorComponent implements OnInit, ControlValueAccessor {
   setDisabledState?(isDisabled: boolean): void {
 
   }
+
 }
